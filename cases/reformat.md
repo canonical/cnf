@@ -1470,6 +1470,48 @@ e:
 
 
 
+## Case: merge-unfold-empty-map
+
+An empty inline map is a fair merge target for a path unfold:
+it has no items to keep inline - and no block form, until the
+items arrive - so the split key nests under it, whichever
+order the two lines come in. Both spellings render to the
+one block map.
+
+```
+to-json: "advised-text"
+from-ast: "advised-text"
+parse-ast: true
+reformat:
+    unfold-path-from-depth: 1
+```
+
+### cnf
+
+```
+a:
+    b: 1
+```
+
+### json
+
+```
+{"a":{"b":1}}
+```
+
+### ast
+
+```
+a: {}
+a.b: 1
+```
+
+```
+a.b: 1
+a: {}
+```
+
+
 ## Case: merge-error
 
 A merge that cannot resolve is a conflict: two lines reaching one
@@ -1501,10 +1543,12 @@ is not a block map, colliding with an existing key that holds
 one. The split level's inner item inserts into the existing
 map, and a scalar reaching a key the map already holds is
 already held: the render fails rather than emit invalid cnf.
+The tree arrives through the review form: the document the
+cnf spelling would hold is rejected by the parse-level
+expansion check, so only the AST carries it.
 
 ```
 from-ast: "error"
-parse-ast: true
 reformat:
     unfold-path-from-depth: 2
 error: "4:5: cannot merge with previous `c`: not a map"
@@ -1514,10 +1558,35 @@ error: "4:5: cannot merge with previous `c`: not a map"
 ### ast
 
 ```
-a.b:
-    c:
-        d: 1
-a.b.c: 2
+{
+    "value": {
+        "map": [{
+            "key": [{"str":"a","pos":{"l":1,"c":1}}, {"str":"b","pos":{"l":1,"c":3}}],
+            "value": {
+                "map": [{
+                    "key": [{"str":"c","pos":{"l":2,"c":5}}],
+                    "value": {
+                        "map": [{
+                            "key": [{"str":"d","pos":{"l":3,"c":9}}],
+                            "value": {"num":"1","pos":{"l":3,"c":12}}
+                        }],
+                        "block": true,
+                        "pos": {"l":3,"c":9}
+                    },
+                    "indent": "    "
+                }],
+                "block": true,
+                "pos": {"l":2,"c":5}
+            },
+            "indent": "    "
+        }, {
+            "key": [{"str":"a","pos":{"l":4,"c":1}}, {"str":"b","pos":{"l":4,"c":3}}, {"str":"c","pos":{"l":4,"c":5}}],
+            "value": {"num":"2","pos":{"l":4,"c":8}}
+        }],
+        "block": true,
+        "pos": {"l":1,"c":1}
+    }
+}
 ```
 
 

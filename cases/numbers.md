@@ -119,6 +119,58 @@ binary: 0b011
 
 
 
+## Case: signed-base-number
+
+The based number forms take a sign: a negative hex, octal or binary literal is a number, converting to its negative decimal value in JSON like the unsigned forms do.
+
+```
+to-json: "advised-text"
+to-ast: "advised-value"
+from-ast: "advised-text"
+```
+
+### cnf
+
+```
+a: -0x1f
+b: -0o17
+c: -0b101
+d: -0xE
+```
+
+### json
+
+```
+{"a":-31,"b":-15,"c":-5,"d":-14}
+```
+
+### ast
+
+```
+{
+    "value": {
+        "map": [{
+            "key": [{"str":"a","pos":{"l":1,"c":1}}],
+            "value": {"num":"-0x1f","pos":{"l":1,"c":4}}
+        }, {
+            "key": [{"str":"b","pos":{"l":2,"c":1}}],
+            "value": {"num":"-0o17","pos":{"l":2,"c":4}}
+        }, {
+            "key": [{"str":"c","pos":{"l":3,"c":1}}],
+            "value": {"num":"-0b101","pos":{"l":3,"c":4}}
+        }, {
+            "key": [{"str":"d","pos":{"l":4,"c":1}}],
+            "value": {"num":"-0xE","pos":{"l":4,"c":4}}
+        }],
+        "block": true,
+        "pos": {"l":1,"c":1}
+    }
+}
+```
+
+
+
+
 ## Case: spelling-preserved
 
 Number forms JSON cannot hold pass through cnf verbatim: trailing zeros and big integers, in decimal and in the other bases.
@@ -295,6 +347,33 @@ a: 12z
 
 ```
 a: 0x
+```
+
+
+## Case: lonely-dot-error
+
+A number needs a digit on both sides of its dot: a leading
+one makes the token a bare word, a trailing one a number
+with an empty fraction, and neither parses. The two fail
+through different gates, so the message names one or the
+other while the position stays pinned at the value.
+
+```
+to-json: "error"
+to-ast: "error"
+error: {regexp: "^1:4: cannot parse (number|unquoted value) \"${a}\"$"}
+vars:
+    a: {regexp: ": (\\S+)"}
+```
+
+### cnf
+
+```
+a: .5
+```
+
+```
+a: 5.
 ```
 
 

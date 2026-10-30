@@ -281,13 +281,12 @@ a.c."e f": 3
 ## Case: key-conflict-error
 
 Redefining a key is a conflict: scalar-over-scalar, same value, map-over-scalar, scalar-over-map.
-The conflict is in the interpretation; the AST keeps both pairs as written.
+The conflict is in the parse; the AST is never built.
 
 ```
 to-json: "error"
-to-ast: "advised-value"
-from-ast: "advised-text"
-error: "2:1: cannot merge with previous `a`: not a map"
+to-ast: "error"
+error: "2:1: cannot redefine previous key `a`"
 ```
 
 ### cnf
@@ -297,22 +296,27 @@ a: 1
 a: 2
 ```
 
-### ast
+
+## Case: inline-map-expand-error
+
+A map cannot be expanded more than once: two inline maps under the same key are an error, empty or not, even though their own keys do not conflict. The conflict is in the parse; the AST is never built.
 
 ```
-{
-    "value": {
-        "map": [{
-            "key": [{"str":"a","pos":{"l":1,"c":1}}],
-            "value": {"num":"1","pos":{"l":1,"c":4}}
-        }, {
-            "key": [{"str":"a","pos":{"l":2,"c":1}}],
-            "value": {"num":"2","pos":{"l":2,"c":4}}
-        }],
-        "block": true,
-        "pos": {"l":1,"c":1}
-    }
-}
+to-json: "error"
+to-ast: "error"
+error: "2:1: cannot expand map key `a` more than once"
+```
+
+### cnf
+
+```
+a: {b: 1}
+a: {c: 2}
+```
+
+```
+a: {}
+a: {}
 ```
 
 
@@ -1380,6 +1384,65 @@ a.b.d: 2
         }, {
             "key": [{"str":"a","pos":{"l":5,"c":1}}, {"str":"b","pos":{"l":5,"c":3}}, {"str":"d","pos":{"l":5,"c":5}}],
             "value": {"num":"2","pos":{"l":5,"c":8}}
+        }],
+        "block": true,
+        "pos": {"l":1,"c":1}
+    }
+}
+```
+
+
+## Case: merge-maps-nested-path
+
+A key path merges into an inline map nested at any depth, whether the path
+comes from a later line or from the same inline map. The merge happens in the
+interpretation: the AST keeps the pairs as written.
+
+```
+to-json: "advised-text"
+from-ast: "advised-text"
+```
+
+### cnf
+
+```
+a: {b: {c: 1}}
+a.b.d: 2
+```
+
+```
+a: {b: {c: 1}, b.d: 2}
+```
+
+### json
+
+```
+{"a":{"b":{"c":1,"d":2}}}
+```
+
+### ast
+
+```
+{
+    "value": {
+        "map": [{
+            "key": [{"str":"a","pos":{"l":1,"c":1}}],
+            "value": {
+                "map": [{
+                    "key": [{"str":"b","pos":{"l":1,"c":5}}],
+                    "value": {
+                        "map": [{
+                            "key": [{"str":"c","pos":{"l":1,"c":9}}],
+                            "value": {"num":"1","pos":{"l":1,"c":12}}
+                        }],
+                        "pos": {"l":1,"c":8}
+                    }
+                }],
+                "pos": {"l":1,"c":4}
+            }
+        }, {
+            "key": [{"str":"a","pos":{"l":2,"c":1}}, {"str":"b","pos":{"l":2,"c":3}}, {"str":"d","pos":{"l":2,"c":5}}],
+            "value": {"num":"2","pos":{"l":2,"c":8}}
         }],
         "block": true,
         "pos": {"l":1,"c":1}
