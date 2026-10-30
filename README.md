@@ -92,7 +92,7 @@ list:
         - "list 1 item 1"
         - "list 1 item 2"
         ---
-        - "list 2 item 1
+        - "list 2 item 1"
         ---
 
 string:
