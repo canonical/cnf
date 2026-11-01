@@ -357,6 +357,39 @@ l: [{label: "first map"}, {label: "second map"}]
 ```
 
 
+## Case: list-element-key-path
+
+Key paths split into nested maps inside the map elements of every list layout: inline, dashed and fenced.
+
+```
+to-json: "advised-text"
+```
+
+### cnf
+
+```
+a: [{b.c: 1}]
+```
+
+```
+a:
+    - {b.c: 1}
+```
+
+```
+a:
+    ---
+    b.c: 1
+    ---
+```
+
+### json
+
+```
+{"a":[{"b":{"c":1}}]}
+```
+
+
 ## Case: list-fences
 
 List fences (---) separate heterogeneous list elements: lists and maps.
@@ -758,6 +791,28 @@ l:
 
     ---
     x
+    ---
+```
+
+
+## Case: list-fence-duplicate-key-error
+
+A key cannot be defined twice in a block map held by a list
+fence. The conflict is in the parse; the AST is never built.
+
+```
+to-json: "error"
+to-ast: "error"
+error: "4:5: cannot redefine previous key `b`"
+```
+
+### cnf
+
+```
+a:
+    ---
+    b: 1
+    b: 2
     ---
 ```
 
