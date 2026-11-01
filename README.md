@@ -133,7 +133,8 @@ numbers:
 
 - [go-cnf/cnfast](https://pkg.go.dev/github.com/canonical/go-cnf/cnfast) - Original AST parser and renderer built during development. 
 - [go-cnf/cnfpretty](https://pkg.go.dev/github.com/canonical/go-cnf/cnfpretty) - Go pretty printer for cnfast. 
-- [go-cnf/cnfjson](https://pkg.go.dev/github.com/canonical/go-cnf/cnfjson) - Go text-preserving bridge between cnf and json. 
+- [go-cnf/cnfjson](https://pkg.go.dev/github.com/canonical/go-cnf/cnfjson) - Go text-preserving bridge between cnf and json.
+- [go-cnf/cnfembed](https://pkg.go.dev/github.com/canonical/go-cnf/cnfembed) - Text-preserving cnf to json, self-contained file for embedding.
 - [go-cnf/cnfmap](https://pkg.go.dev/github.com/canonical/go-cnf/cnfmap) - Simple Marshaler and Unmarshaler for Go values. 
 - [go-cnf/cnftest](https://pkg.go.dev/github.com/canonical/go-cnf/cnftest) - Go harness to run the conformance tests.
 
