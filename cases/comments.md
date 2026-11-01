@@ -998,7 +998,7 @@ content.
 ```
 to-json: "error"
 to-ast: "error"
-error: {regexp: "^2:(7|8|5): cannot (find key-value separator ':'|parse space in path|parse key .*|find closing (list )?fence)$"}
+error: {regexp: "^2:(7|8|5): cannot (find key-value separator `:`|parse space in path|parse key .*|find closing (list )?fence)$"}
 ```
 
 ### cnf

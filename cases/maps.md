@@ -686,7 +686,7 @@ a: {b 1}
 ```
 to-json: "error"
 to-ast: "error"
-error: "1:6: cannot find key-value separator ':'"
+error: "1:6: cannot find key-value separator `:`"
 ```
 
 ### cnf
@@ -701,7 +701,7 @@ a: {b}
 ```
 to-json: "error"
 to-ast: "error"
-error: "1:4: cannot find closing '}'"
+error: "1:4: cannot find closing `}`"
 ```
 
 ### cnf
@@ -757,7 +757,7 @@ always.
 ```
 to-json: "error"
 to-ast: "error"
-error: "2:6: cannot find key-value separator ':'"
+error: "2:6: cannot find key-value separator `:`"
 ```
 
 ### cnf

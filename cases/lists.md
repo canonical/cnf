@@ -62,7 +62,7 @@ apart: the error names the list that ran out of line.
 ```
 to-json: "error"
 to-ast: "error"
-error: {regexp: "^1:${open:c}: cannot find closing '\\]'$"}
+error: {regexp: "^1:${open:c}: cannot find closing `]`$"}
 vars:
     open: {regexp: "(\\[1)"}
 ```
