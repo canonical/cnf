@@ -14,6 +14,7 @@ so please report issues timely since we are about to close it down.
 ## Contents
 
 - [Overview](#overview)
+  - [Meaning and how to pronounce](#meaning-and-how-to-pronounce)
   - [Filename extension](#filename-extension)
   - [Example](#example)
   - [Implementations](#implementations)
@@ -42,6 +43,10 @@ so please report issues timely since we are about to close it down.
 - [Appendix: Maintaining this document](#appendix-maintaining-this-document)
 
 ## Overview
+
+### Meaning and how to pronounce
+
+The _cnf_ name is pronounced as _conf_ and stands for _configuration_.
 
 ### Filename extension
 
