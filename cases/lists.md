@@ -180,7 +180,7 @@ the colon, and the error spells the key.
 ```
 to-json: "error"
 to-ast: "error"
-error: "2:5: cannot omit the value for `a`"
+error: "2:5: cannot omit the value for \"a\""
 ```
 
 ### cnf
@@ -803,7 +803,7 @@ fence. The conflict is in the parse; the AST is never built.
 ```
 to-json: "error"
 to-ast: "error"
-error: "4:5: cannot redefine previous key `b`"
+error: "4:5: cannot redefine previous key \"b\""
 ```
 
 ### cnf

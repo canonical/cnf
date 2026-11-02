@@ -1514,15 +1514,13 @@ a: {}
 
 ## Case: merge-error
 
-A merge that cannot resolve is a conflict: two lines reaching one
-key with values the insert cannot join - a scalar against a map, or
-two scalars at one key - refuse, the render failing rather than
-emitting invalid cnf. The AST keeps both pairs as written; the
-conflict is in the rewrite.
+A merge that cannot resolve is a conflict: two lines reaching
+one key with values the insert cannot join - a scalar against
+a map, or two scalars at one key - refuse, the render failing
+rather than emitting invalid cnf.
 
 ```
 from-ast: "error"
-parse-ast: true
 reformat:
     unfold-path-from-depth: 2
 error: "2:1: cannot merge with previous `a.b`: not a map"
@@ -1531,8 +1529,26 @@ error: "2:1: cannot merge with previous `a.b`: not a map"
 ### ast
 
 ```
-a.b: 1
-a.b.c: 2
+{
+    "value": {
+        "map": [{
+            "key": [
+                {"str":"a","pos":{"l":1,"c":1}},
+                {"str":"b","pos":{"l":1,"c":3}}
+            ],
+            "value": {"num":"1","pos":{"l":1,"c":6}}
+        }, {
+            "key": [
+                {"str":"a","pos":{"l":2,"c":1}},
+                {"str":"b","pos":{"l":2,"c":3}},
+                {"str":"c","pos":{"l":2,"c":5}}
+            ],
+            "value": {"num":"2","pos":{"l":2,"c":8}}
+        }],
+        "block": true,
+        "pos": {"l":1,"c":1}
+    }
+}
 ```
 
 

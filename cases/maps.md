@@ -1,6 +1,7 @@
 # Topic
 
-Maps: pairs, keys and paths, the inline and block forms, merging and conflicts, and the writer's folding and layout advice.
+Maps: pairs, keys and paths, the inline and block forms, merging and
+conflicts, and the writer's folding and layout advice.
 
 
 ## Case: simple-keys
@@ -286,7 +287,7 @@ The conflict is in the parse; the AST is never built.
 ```
 to-json: "error"
 to-ast: "error"
-error: "2:1: cannot redefine previous key `a`"
+error: "2:1: cannot redefine previous key \"a\""
 ```
 
 ### cnf
@@ -297,6 +298,170 @@ a: 2
 ```
 
 
+
+## Case: key-conflict-anchored-at-segment
+
+A key conflict is anchored at the redefining segment, not at
+the head of the path: `b` at the third column, spelled alone.
+
+```
+to-json: "error"
+to-ast: "error"
+error: "2:3: cannot redefine previous key \"b\""
+```
+
+### cnf
+
+```
+a.b: 1
+a.b: 2
+```
+
+
+
+## Case: key-conflict-after-syntax-error
+
+A key conflict and a later syntax error in one document:
+the syntax error wins - the conflict is only decided once
+the whole document parses, so the missing colon on the
+third line is the answer, not the redefinition on the
+second.
+
+```
+to-json: "error"
+to-ast: "error"
+error: "3:2: cannot find key-value separator `:`"
+```
+
+### cnf
+
+```
+a.b: 1
+a.b: 2
+c
+```
+
+
+## Case: key-conflict-numeric-spelling
+
+A bare numeric key is a string: digits are bare words in the
+document, but the message quotes it as the string it is.
+
+```
+to-json: "error"
+to-ast: "error"
+error: "2:1: cannot redefine previous key \"123\""
+```
+
+### cnf
+
+```
+123: 1
+123: 2
+```
+
+
+## Case: key-conflict-word-spelling
+
+A bare word key is a string too: the message quotes it, not
+the bare way the document wrote it.
+
+```
+to-json: "error"
+to-ast: "error"
+error: "2:1: cannot redefine previous key \"bare\""
+```
+
+### cnf
+
+```
+bare: 1
+bare: 2
+```
+
+
+## Case: key-conflict-quoted-spelling
+
+A quoted key keeps its family: quoted already, no escalation
+needed.
+
+```
+to-json: "error"
+to-ast: "error"
+error: "2:1: cannot redefine previous key \"foo\""
+```
+
+### cnf
+
+```
+"foo": 1
+"foo": 2
+```
+
+
+## Case: key-conflict-quote-holding-spelling
+
+A single-quoted key holding a double quote keeps its family:
+single quotes, the family that holds the content.
+
+```
+to-json: "error"
+to-ast: "error"
+error: "2:1: cannot redefine previous key '\"foo'"
+```
+
+### cnf
+
+```
+'"foo': 1
+'"foo': 2
+```
+
+
+## Case: path-through-scalar-error
+
+A path may only traverse a map: reaching through a key
+defined as a scalar assigns it two values - the scalar and
+the map the path needs - so it is a redefinition of that
+key, anchored where the path reaches into it.
+
+```
+to-json: "error"
+to-ast: "error"
+error: "2:1: cannot redefine previous key \"a\""
+```
+
+### cnf
+
+```
+a: 1
+a.b: 2
+```
+
+
+
+## Case: path-through-scalar-nested-error
+
+The same reaching through a scalar, nested under a parent
+key: the redefinition is anchored at the traversed `a`, the
+third column of the third line.
+
+```
+to-json: "error"
+to-ast: "error"
+error: "3:3: cannot redefine previous key \"a\""
+```
+
+### cnf
+
+```
+invalid:
+  a: 1
+  a.b: 2
+```
+
+
+
 ## Case: inline-map-expand-error
 
 A map cannot be expanded more than once: two inline maps under the same key are an error, empty or not, even though their own keys do not conflict. The conflict is in the parse; the AST is never built.
@@ -304,7 +469,7 @@ A map cannot be expanded more than once: two inline maps under the same key are 
 ```
 to-json: "error"
 to-ast: "error"
-error: "2:1: cannot expand map key `a` more than once"
+error: "2:1: cannot expand map key \"a\" more than once"
 ```
 
 ### cnf
@@ -319,6 +484,36 @@ a: {}
 a: {}
 ```
 
+
+## Case: unquoted-tab-key-conflict
+
+A tree built by hand can mark anything unquoted: a key holding
+a tab, duplicated - a tree no cnf document could parse into.
+The render runs the conflict check too, so the tree refuses
+there instead of writing the duplicate pairs.
+
+```
+from-ast: "error"
+error: "2:1: cannot redefine previous key \"a\\tb\""
+```
+
+### ast
+
+```
+{
+    "value": {
+        "map": [{
+            "key": [{"str":"a\tb","pos":{"l":1,"c":1}}],
+            "value": {"num":"1","pos":{"l":1,"c":6}}
+        }, {
+            "key": [{"str":"a\tb","pos":{"l":2,"c":1}}],
+            "value": {"num":"2","pos":{"l":2,"c":6}}
+        }],
+        "block": true,
+        "pos": {"l":1,"c":1}
+    }
+}
+```
 
 
 ## Case: json-key-conflict-error
@@ -374,6 +569,25 @@ a: )
 ```
 
 
+## Case: stray-value-spelling
+
+Unparseable text has no spelling of its own to echo: the
+message wraps it in backticks as it stands, quotes it holds
+included.
+
+```
+to-json: "error"
+to-ast: "error"
+error: "1:4: cannot parse value at `@\\\"foo`"
+```
+
+### cnf
+
+```
+a: @"foo
+```
+
+
 ## Case: no-value-error
 
 A key-value pair needs an explicit value.
@@ -381,7 +595,7 @@ A key-value pair needs an explicit value.
 ```
 to-json: "error"
 to-ast: "error"
-error: {regexp: "^2:5: cannot omit the value for (`b`|`b\\.c`)$"}
+error: {regexp: "^2:5: cannot omit the value for (\"b\"|`b\\.c`)$"}
 ```
 
 ### cnf
@@ -395,6 +609,24 @@ a:
 a:
     b.c:
 ``` 
+
+
+## Case: no-value-path-spelling
+
+A whole key path keeps its backticks - the path is one unit,
+its quoted segments spelled inside them.
+
+```
+to-json: "error"
+to-ast: "error"
+error: "1:1: cannot omit the value for `a.'b c'`"
+```
+
+### cnf
+
+```
+a.'b c':
+```
 
 
 ## Case: lone-bare-error
@@ -1185,7 +1417,7 @@ is left without a value.
 ```
 to-json: "error"
 to-ast: "error"
-error: "1:1: cannot omit the value for `a`"
+error: "1:1: cannot omit the value for \"a\""
 ```
 
 ### cnf

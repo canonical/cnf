@@ -1137,7 +1137,7 @@ without a value.
 ```
 to-json: "error"
 to-ast: "error"
-error: "1:1: cannot omit the value for `a`"
+error: "1:1: cannot omit the value for \"a\""
 ```
 
 ### cnf
