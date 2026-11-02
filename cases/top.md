@@ -435,7 +435,7 @@ Trailing content after a top-level value is rejected.
 ```
 to-json: "error"
 to-ast: "error"
-error: "2:1: cannot parse content after top-level value: \"2\""
+error: "2:1: cannot parse content after top-level value: `2`"
 ```
 
 ### cnf
@@ -454,7 +454,7 @@ elided.
 ```
 to-json: "error"
 to-ast: "error"
-error: "2:1: cannot parse content after top-level value: \"hello...\""
+error: "2:1: cannot parse content after top-level value: `hello...`"
 ```
 
 ### cnf

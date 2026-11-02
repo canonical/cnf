@@ -1033,7 +1033,7 @@ An inline fence closes at the first delimiter; a stray single quote after the cl
 ```
 to-json: "error"
 to-ast: "error"
-error: "1:12: cannot parse trailing \"'\""
+error: "1:12: cannot parse trailing `'`"
 ```
 
 ### cnf
@@ -1050,7 +1050,7 @@ An inline fence closes at the first delimiter; a stray double quote after the cl
 ```
 to-json: "error"
 to-ast: "error"
-error: "1:12: cannot parse trailing \"\\\"\""
+error: "1:12: cannot parse trailing `\\\"`"
 ```
 
 ### cnf

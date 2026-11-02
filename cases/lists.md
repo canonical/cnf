@@ -86,7 +86,7 @@ bracket; anything else is named at its own first column.
 ```
 to-json: "error"
 to-ast: "error"
-error: {regexp: "^1:${off:c}: cannot parse \"${off}\" inside list$"}
+error: {regexp: "^1:${off:c}: cannot parse `${off}` inside list$"}
 vars:
     off: {regexp: "(; 2\\]|2\\])"}
 ```
@@ -818,9 +818,6 @@ a:
 
 
 ## Case: inline-list-block-layout-error
-
-An inline list renders its elements on the one line: an element
-item claiming a block layout inside it is a malformed AST, and
 the render rejects it instead of silently normalizing the
 form.
 

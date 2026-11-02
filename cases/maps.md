@@ -328,7 +328,7 @@ but an implementation that supports translation must not ignore it.
 
 ```
 from-json: "error"
-error: "cannot redefine key \"a\""
+error: "cannot redefine key `a`"
 ```
 
 ### json
@@ -345,7 +345,7 @@ A bare word is never a value: unquoted text after the colon is a syntax error.
 ```
 to-json: "error"
 to-ast: "error"
-error: "1:4: cannot parse unquoted value \"bare\""
+error: "1:4: cannot parse unquoted value `bare`"
 ```
 
 ### cnf
@@ -364,7 +364,7 @@ names the empty token's start.
 ```
 to-json: "error"
 to-ast: "error"
-error: "1:4: cannot parse value at \")\""
+error: "1:4: cannot parse value at `)`"
 ```
 
 ### cnf
@@ -404,7 +404,7 @@ A lone bare without the colon and value is an error.
 ```
 to-json: "error"
 to-ast: "error"
-error: {regexp: "^1:1: cannot parse unquoted value (\"a\"|\"a\\.b\")$"}
+error: {regexp: "^1:1: cannot parse unquoted value (`a`|`a\\.b`)$"}
 ```
 
 ### cnf
@@ -716,7 +716,7 @@ a: {b: 1
 ```
 to-json: "error"
 to-ast: "error"
-error: "1:10: cannot parse \"2}\" inside map"
+error: "1:10: cannot parse `2}` inside map"
 ```
 
 ### cnf
@@ -736,7 +736,7 @@ The empty map spells inline on the pair's line, always.
 ```
 to-json: "error"
 to-ast: "error"
-error: "2:5: cannot parse key \"{\""
+error: "2:5: cannot parse key `{`"
 ```
 
 ### cnf

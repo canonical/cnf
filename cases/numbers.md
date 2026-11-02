@@ -291,7 +291,7 @@ A redundant leading zero is a syntax error; 0x02 is a hex literal, not one.
 ```
 to-json: "error"
 to-ast: "error"
-error: "1:4: cannot parse number \"02\": redundant leading zero"
+error: "1:4: cannot parse number `02`: redundant leading zero"
 ```
 
 ### cnf
@@ -308,7 +308,7 @@ The uppercase exponent marker is a syntax error; the grammar is lowercase-only.
 ```
 to-json: "error"
 to-ast: "error"
-error: "1:4: cannot parse number \"1E5\": uppercase exponent"
+error: "1:4: cannot parse number `1E5`: uppercase exponent"
 ```
 
 ### cnf
@@ -326,7 +326,7 @@ bare word is never a value. Empty base digits are errors too.
 ```
 to-json: "error"
 to-ast: "error"
-error: "1:4: cannot parse number \"${a}\""
+error: "1:4: cannot parse number `${a}`"
 vars:
     a: {regexp: ": (\\S+)"}
 ```
@@ -361,7 +361,7 @@ other while the position stays pinned at the value.
 ```
 to-json: "error"
 to-ast: "error"
-error: {regexp: "^1:4: cannot parse (number|unquoted value) \"${a}\"$"}
+error: {regexp: "^1:4: cannot parse (number|unquoted value) `${a}`$"}
 vars:
     a: {regexp: ": (\\S+)"}
 ```
