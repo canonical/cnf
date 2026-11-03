@@ -669,13 +669,23 @@ service:
     enabled: true
 ```
 
-Comments follow strict placement contraints that have the intent of improving
-clairty of the text as a whole, and facilitating semantic parsing of the comments.
+Comments follow strict placement constraints that have the intent of improving
+clarity of the text as a whole, and facilitating semantic parsing of the comments.
 
 Specifically:
 
 - They follow the same general indentation rules.
 - They are not allowed around fence openings and closings.
+
+As an example, the following is invalid:
+
+```
+invalid:
+    # Standalone comment
+    enabled: true
+# invalid comment, bad indentation
+    more: keys
+```
 
 
 ## Authors
